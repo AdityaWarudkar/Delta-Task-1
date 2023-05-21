@@ -1,0 +1,418 @@
+HTML Code:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAKE Project Delta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="class">
+        <div class="but">
+            <button id="b1" onclick="move1()">
+                up
+            </button>
+            <button id="b2" onclick="move2()" >
+                down
+            </button>
+            <button id="b3" onclick="move4()" >
+                right
+            </button>
+            <button id="b4"onclick="move3()" >
+                left
+            </button>
+        </div>
+        <div id="scoreBox">Score: 0</div>
+        <div id="note">Eat in order of Red,Blue,Yellow and Green </div>
+        <div id="board">
+        
+        </div>
+    </div>
+    
+</body>
+<script src="snake.js"> 
+</script>
+</html>
+
+
+CSS Code:
+
+*{
+    padding: 0px;
+    margin:0px;
+}
+body{
+   background-image: url('8552481.jpg');
+   min-height: 100vh;
+   background-size: 120vw 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+#scoreBox{
+    position:absolute;
+    top:15px;
+    right:160px;
+    font-size: 45px;
+    font-weight: bold;
+}
+#board{
+    background: linear-gradient(rgb(113, 115, 113),rgb(126, 75, 129));
+    width:98vmin;
+    height:98vmin;
+    border:2px solid black;
+    display: grid;
+    grid-template-columns: repeat(20,1fr);
+    grid-template-rows: repeat(20,1fr);
+}
+
+#b1{
+    background-color:rgb(85, 83, 83);
+    border:2px solid black;
+    margin:10px;
+    padding :10px;
+    border-radius: 4px;
+    height:40px;
+    width:70px;
+   
+}
+#b2{
+    background-color:rgb(85, 83, 83);
+    border:2px solid black;
+    margin:10px;
+    padding :10px;
+    border-radius: 4px;
+    height:40px;
+    width:70px;
+
+}
+#b3{
+    background-color:rgb(85, 83, 83);
+    border:2px solid black;
+    margin:10px;
+    padding :10px;
+    border-radius: 4px;
+    height:40px;
+    width:70px;
+    
+}
+#b4{
+    background-color:rgb(85, 83, 83);
+    border:2px solid black;
+    margin:10px;
+    padding :10px;
+    border-radius: 4px;
+    height:40px;
+    width:70px;
+    
+}
+
+.head{
+    background: linear-gradient(violet,rgb(114, 3, 3));
+    border:2px solid purple;
+    transform:scale(1.02);
+    border-radius: 8px;
+}
+#note{
+    text-align: left;
+    font-weight: bold;
+}
+.snake{
+    background-color: rgb(13, 232, 221);
+    border: .25vmin solid white;
+    border-radius: 12px;
+}
+.food1{
+    background:red;
+    border: .25vmin solid black;
+    border-radius: 8px;
+}
+.food2{
+    background:blue;
+    border: .25vmin solid black;
+    border-radius: 8px;
+}
+.food3{
+    background:yellow;
+    border: .25vmin solid black;
+    border-radius: 8px;
+}
+.food4{
+    background:green;
+    border: .25vmin solid black;
+    border-radius: 8px;
+}
+
+
+JavaScript Code:
+
+let inputDir = { x: 0, y: 0 };
+const gameoversound = new Audio('wrong-buzzer-6268.mp3');
+const musicsound = new Audio('Snake Game - Theme Song.mp3');
+const foodsound = new Audio('food_G1U6tlb.mp3');
+let speed = 15;
+let lastpainttime = 0;
+let score = 0;
+let snakeArr = [
+    { x: 13, y: 15 }
+]
+food1 = { x: 6, y: 15 };
+food2 = { x: 12, y: 12 };
+food3 = { x: 13, y: 10 };
+ food4={x:1,y:18};
+let red=2;
+let blue=0;
+let yellow=1;
+let seconds=60;
+
+function main(ctime){
+    window.requestAnimationFrame(main);
+    if((ctime-lastpainttime)/1000 <1/speed){
+        return ;
+
+    }
+    lastpainttime=ctime;
+    gameengine();
+}
+
+function isCollide(snake) {
+    for (let i = 1; i < snakeArr.length; i++) {
+        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+            return true;
+        }
+        if (snake[0].x >= 20 || snake[0].x <= 0 || snake[0].y >= 20 || snake[0].y <= 0) {
+            return true;
+        }
+
+
+    }
+}
+function move1() {
+    console.log("ArrowUp");
+    inputDir.x = 0;
+    inputDir.y = -1;   
+}
+function move2() {
+    console.log("ArrowDown");
+    inputDir.x = 0;
+    inputDir.y = 1;
+}
+function move3() {
+    console.log("ArrowLeft");
+    inputDir.x = -1;
+    inputDir.y = 0;
+}
+function move4() {
+    console.log("ArrowRight");
+    inputDir.x = 1;
+    inputDir.y = 0;
+}
+
+function gameengine() {
+    if (isCollide(snakeArr)) {
+        gameoversound.play();
+        inputDir = { x: 0, y: 0 };
+        alert("GameOver.Press any key to play Again");
+        snakeArr = [{ x: 13, y: 15 }];
+        score = 0;
+        let red=2;
+        let blue=0;
+        let yellow=1;
+        let seconds=60;
+
+    }
+
+
+    
+    if(snakeArr[0].x===food1.x && snakeArr[0].y===food1.y){
+       red++;
+       if(red===yellow+2 && red===blue+3){
+        snakeArr.unshift({ x: snakeArr[0].x + inputDir.x, y: snakeArr[0].y + inputDir.y });
+            
+            let a=2;
+            let b=16;
+            food1 = { x: Math.round(a + (b - a) * Math.random()), y: Math.round(a + (b - a) * Math.random()) };
+            score++;
+            scoreBox.innerHTML="Score :"+ score;
+       }
+       else{
+        gameoversound.play();
+        alert("Game Over");
+        snakeArr[{
+            x:13,y:15
+        }]
+        inputDir.x=0;
+        inputDir.y=0;
+        seconds=60;
+        scorebox.textContent="score:0";
+        score=0;
+        red=2;yellow=1;blue=0;
+
+    }
+
+    }
+    if(snakeArr[0].x===food2.x && snakeArr[0].y===food2.y){
+        yellow++;
+        if(red==yellow+1 && blue==yellow-2){
+            foodsound.play();
+            snakeArr.unshift({ x: snakeArr[0].x + inputDir.x, y: snakeArr[0].y + inputDir.y });
+            
+            let a=2;
+            let b=18;
+            food2 = { x: Math.round(a + (b - a) * Math.random()), y: Math.round(a + (b - a) * Math.random()) };
+            score++;
+            scoreBox.innerHTML="Score :"+ score;
+
+        }
+        else{
+            gameoversound.play();
+            alert("Game Over");
+            snakeArr[{
+                x:13,y:15
+            }]
+            inputDir.x=0;
+            inputDir.y=0;
+            seconds=60;
+            scorebox.textContent="score:0";
+            score=0;
+            red=2;yellow=1;blue=0;
+
+        }
+
+    }
+    if(snakeArr[0].x===food3.x && snakeArr[0].y===food3.y){
+        blue++;
+        if( red===blue+2 && yellow===blue+1){
+            foodsound.play();
+            snakeArr.unshift({ x: snakeArr[0].x + inputDir.x, y: snakeArr[0].y + inputDir.y });
+            
+            let a=2;
+            let b=18;
+            food3 = { x: Math.round(a + (b - a) * Math.random()), y: Math.round(a + (b - a) * Math.random()) };
+            score++;
+            scoreBox.innerHTML="Score :"+ score;
+            
+           
+
+        }
+        else{
+            gameoversound.play();
+            alert("Game Over");
+            snakeArr[{
+                x:13,y:15
+            }]
+            inputDir.x=0;
+            inputDir.y=0;
+            seconds=60;
+            scorebox.textContent="score:0";
+            score=0;
+            red=2;yellow=1;blue=0;
+
+        }
+    }
+    if(snakeArr[0].x===food4.x && snakeArr[0].y===food4.y){
+        seconds=seconds+4;
+        let a=2;
+        let b=18;
+        food4 = { x: Math.round(a + (b - a) * Math.random()), y: Math.round(a + (b - a) * Math.random()) };
+        
+    }
+    // scoreBox.innerHTML="Score :"+ score;
+    //moving the snake
+    for (let i = snakeArr.length - 2; i >= 0; i--) {
+
+        snakeArr[i + 1] = { ...snakeArr[i] };
+
+    }
+    snakeArr[0].x = snakeArr[0].x + inputDir.x;
+    snakeArr[0].y = snakeArr[0].y + inputDir.y;
+
+
+
+
+
+    //display snake
+    board.innerHTML = "";
+    snakeArr.forEach((e, index) => {
+        snakeElement = document.createElement('div');
+        snakeElement.style.gridRowStart = e.y;
+        snakeElement.style.gridColumnStart = e.x;
+        if (index === 0) {
+            snakeElement.classList.add('head');
+
+        }
+        else {
+            snakeElement.classList.add('snake');
+        }
+        board.appendChild(snakeElement);
+
+    })
+
+    food1Element = document.createElement('div');
+    food1Element.style.gridRowStart = food1.y;
+    food1Element.style.gridColumnStart = food1.x;
+    food1Element.classList.add('food1');
+    board.appendChild(food1Element);
+
+    food2Element = document.createElement('div');
+    food2Element.style.gridRowStart = food2.y;
+    food2Element.style.gridColumnStart = food2.x;
+    food2Element.classList.add('food2');
+    board.appendChild(food2Element);
+
+    food3Element = document.createElement('div');
+    food3Element.style.gridRowStart = food3.y;
+    food3Element.style.gridColumnStart = food3.x;
+    food3Element.classList.add('food3');
+    board.appendChild(food3Element);
+
+    food4Element = document.createElement('div');
+    food4Element.style.gridRowStart = food4.y;
+    food4Element.style.gridColumnStart = food4.x;
+    food4Element.classList.add('food4');
+    board.appendChild(food4Element);
+
+}
+
+
+
+
+
+
+
+window.requestAnimationFrame(main);
+window.addEventListener('keydown', e => {
+    inputDir = { x: 0, y: 1 };
+
+    switch (e.key) {
+        case "ArrowUp":
+            console.log("ArrowUp");
+            inputDir.x = 0;
+            inputDir.y = -1;
+            break;
+
+        case "ArrowDown":
+            console.log("ArrowDown");
+            inputDir.x = 0;
+            inputDir.y = 1;
+            break;
+
+        case "ArrowLeft":
+            console.log("ArrowLeft");
+            inputDir.x = -1;
+            inputDir.y = 0;
+            break;
+
+        case "ArrowRight":
+            console.log("ArrowRight");
+            inputDir.x = 1;
+            inputDir.y = 0;
+            break;
+
+        default:
+            break;
+    }
+});
